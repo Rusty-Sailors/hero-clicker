@@ -27,8 +27,6 @@ fn load_assets(mut command: Commands, asset_server: Res<AssetServer>, mut textur
 
 fn spawn_hero(mut commands: Commands, hero_assets: Res<HeroSheet>) {
     let sprite: TextureAtlasSprite = TextureAtlasSprite::new(0);
-    // sprite.color = Color::rgb(0.3, 0.3, 0.9);
-    // sprite.custom_size = Some(Vec2::splat(1.0));
     
     commands.spawn_bundle(SpriteSheetBundle {
         sprite: sprite,
