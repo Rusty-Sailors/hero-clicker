@@ -6,9 +6,6 @@ members = [
     "server"
 ]
 
-[workspace.dependencies]
-bevy = { version = "0.8.1", features = ["dynamic"] }
-
 [workspace.package]
 version = "0.1.0"
 edition = "2021"
