@@ -12,7 +12,8 @@ impl Plugin for GoldPlugin {
         app
             .register_type::<Gold>()
             .add_startup_system(startup)
-            .add_system(mouse_click_system);
+            .add_system(mouse_click_system)
+            .add_system(update_gold_text_system);
     }
 }
 
@@ -28,7 +29,7 @@ fn startup(mut commands: Commands, asset_server: Res<AssetServer>) {
         .insert(Name::new("Gold"))
         .insert_bundle(
             TextBundle::from_section(
-                "hello\nbevy!",
+                "0",
                 TextStyle {
                     font: asset_server.load("fonts/Augusta.ttf"),
                     font_size: 100.0,
@@ -41,7 +42,7 @@ fn startup(mut commands: Commands, asset_server: Res<AssetServer>) {
                 position_type: PositionType::Absolute,
                 position: UiRect {
                     bottom: Val::Px(500.0),
-                    right: Val::Px(550.0),
+                    right: Val::Px(605.0),
                     ..default()
                 },
                 ..default()
@@ -55,4 +56,11 @@ fn mouse_click_system(mouse_button_input: Res<Input<MouseButton>>, mut query: Qu
         gold.amount += 1;
         info!(gold.amount);
     }
+}
+
+fn update_gold_text_system(mut query: Query<(&mut Text, &Gold)>) {
+    let data = query.single_mut();
+    let gold = data.1;
+    let mut text = data.0;
+    text.sections[0].value = gold.amount.to_string();
 }
