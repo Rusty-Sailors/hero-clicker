@@ -1,4 +1,5 @@
 [workspace]
+resolver = "2" # Important! wgpu/Bevy needs this!
 
 members = [
     "client",
@@ -6,7 +7,7 @@ members = [
 ]
 
 [workspace.dependencies]
-bevy = "0.8"
+bevy = { version = "0.8.1", features = ["dynamic"] }
 
 [workspace.package]
 version = "0.1.0"
