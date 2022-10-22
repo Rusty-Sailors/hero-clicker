@@ -9,18 +9,24 @@ use bevy_renet::{
 };
 use std::time::SystemTime;
 use std::{net::UdpSocket};
-// use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Serialize};
 
 const PROTOCOL_ID: u64 = 7;
+
+#[derive(Debug, Serialize, Deserialize, Component)]
+enum ClientMessage {
+    ClickEvent
+}
 
 fn main() {
     let server = new_renet_server();
     let mut app = App::new();
     app
-        .add_plugins(MinimalPlugins)
+        .add_plugins(DefaultPlugins)
         .add_plugin(RenetServerPlugin)
         .insert_resource(server)
-        .add_system(handle_server_events_system);
+        .add_system(handle_server_events_system)
+        .add_system(handle_client_messages);
     app.run();
 }
 
@@ -41,6 +47,19 @@ fn handle_server_events_system(mut server_events: EventReader<ServerEvent>) {
             }
             ServerEvent::ClientDisconnected(id) => {
                 println!("Client {} disconnected", id);
+            }
+        }
+    }
+}
+
+fn handle_client_messages(mut server: ResMut<RenetServer>) {
+    for client_id in server.clients_id().into_iter() {
+        while let Some(message) = server.receive_message(client_id, 0) {
+            let msg = bincode::deserialize(&message).unwrap();
+            match msg {
+                ClientMessage::ClickEvent => {
+                    info!("Got ClickEvent");
+                }
             }
         }
     }

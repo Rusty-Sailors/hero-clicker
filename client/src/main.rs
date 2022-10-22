@@ -17,6 +17,11 @@ mod gold;
 pub use hero::*;
 pub use gold::*;
 
+#[derive(Debug, Serialize, Deserialize, Component)]
+enum ClientMessage {
+    ClickEvent
+}
+
 fn main() {
     App::new()
     .add_plugin(RenetClientPlugin)
@@ -26,6 +31,7 @@ fn main() {
     .add_plugin(WorldInspectorPlugin::default())
     .add_plugin(HeroPlugin)
     .add_plugin(GoldPlugin)
+    .add_system(send_click_event)
     .run();
 }
 
@@ -46,4 +52,11 @@ fn new_renet_client() -> RenetClient {
         user_data: None,
     };
     RenetClient::new(current_time, socket, client_id, connection_config, authentication).unwrap()
+}
+
+fn send_click_event(mouse_button_input: Res<Input<MouseButton>>, mut client: ResMut<RenetClient>) {
+    if mouse_button_input.just_pressed(MouseButton::Left) {
+        let message = bincode::serialize(&ClientMessage::ClickEvent).unwrap();
+        client.send_message(0, message)
+    }
 }
