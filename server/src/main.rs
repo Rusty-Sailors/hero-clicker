@@ -14,9 +14,11 @@ use std::{
     net::UdpSocket,
     time::Duration,
 };
+use iyes_loopless::prelude::*;
 
 use clicker_core::network::*;
 use clicker_core::gold::ClickEvent;
+use clicker_core::AppState;
 
 fn main() {
     let server = new_renet_server();
@@ -25,6 +27,7 @@ fn main() {
         .insert_resource(ScheduleRunnerSettings::run_loop(Duration::from_secs_f64(1.0 / 60.0)))
         .add_plugins(MinimalPlugins)
         .add_plugin(RenetServerPlugin)
+        .add_loopless_state(AppState::InGame)
         .add_plugins(clicker_core::ClickerCorePlugins)
         .insert_resource(server)
         .insert_resource(SyncTimer{ timer: Timer::new(Duration::from_millis(500), true)})

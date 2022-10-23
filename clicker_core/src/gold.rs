@@ -24,6 +24,6 @@ fn hero_clicked_system(mut click_events: EventReader<ClickEvent>, mut gold: ResM
     }
 }
 
-fn calculate_gold_per_click() -> u64 {
+pub fn calculate_gold_per_click() -> u64 {
     1
 }

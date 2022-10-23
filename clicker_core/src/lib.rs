@@ -6,10 +6,12 @@ use bevy::{
 pub mod hero;
 pub mod gold;
 pub mod network;
+pub mod autoclicker;
 
 pub use hero::*;
 pub use gold::*;
 pub use network::*;
+pub use autoclicker::*;
 
 pub struct ClickerCorePlugins;
 
@@ -17,7 +19,8 @@ impl PluginGroup for ClickerCorePlugins {
     fn build(&mut self, group: &mut PluginGroupBuilder) {
         group
             .add(GoldPlugin)
-            .add(HeroPlugin);
+            .add(HeroPlugin)
+            .add(AutoClickerPlugin);
     }
 }
 
