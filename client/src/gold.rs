@@ -1,17 +1,13 @@
 use bevy::prelude::*;
-
-#[derive(Reflect, Component, Default)]
-#[reflect(Component)]
-pub struct Hero {
-}
+use clicker_core::gold::*;
 
 pub struct GoldPlugin;
 
 impl Plugin for GoldPlugin {
     fn build(&self, app: &mut App) {
         app
-            .register_type::<Gold>()
-            .add_startup_system(startup)
+            .register_type::<GoldText>()
+            .add_startup_system(spawn_)
             .add_system(mouse_click_system)
             .add_system(update_gold_text_system);
     }
@@ -19,14 +15,12 @@ impl Plugin for GoldPlugin {
 
 #[derive(Reflect, Component, Default)]
 #[reflect(Component)]
-pub struct Gold {
-    amount: u64
-}
+struct GoldText;
 
-fn startup(mut commands: Commands, asset_server: Res<AssetServer>) {
+fn spawn_(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn()
-        .insert(Gold {amount: 0})
-        .insert(Name::new("Gold"))
+        .insert(GoldText)
+        .insert(Name::new("Gold Text"))
         .insert_bundle(
             TextBundle::from_section(
                 "0",
@@ -50,17 +44,13 @@ fn startup(mut commands: Commands, asset_server: Res<AssetServer>) {
         );
 }
 
-fn mouse_click_system(mouse_button_input: Res<Input<MouseButton>>, mut query: Query<&mut Gold>) {
+fn mouse_click_system(mouse_button_input: Res<Input<MouseButton>>, mut writer: EventWriter<ClickEvent>) {
     if mouse_button_input.just_pressed(MouseButton::Left) {
-        let mut gold = query.single_mut();
-        gold.amount += 1;
-        info!(gold.amount);
+        writer.send(ClickEvent);
     }
 }
 
-fn update_gold_text_system(mut query: Query<(&mut Text, &Gold)>) {
-    let data = query.single_mut();
-    let gold = data.1;
-    let mut text = data.0;
+fn update_gold_text_system(gold: Res<Gold>, mut query: Query<&mut Text, With<GoldText>>) {
+    let mut text = query.single_mut();
     text.sections[0].value = gold.amount.to_string();
 }

@@ -32,7 +32,7 @@ fn main() {
         .add_plugins(clicker_core::ClickerCorePlugins)
         .add_plugin(HeroPlugin)
         .add_plugin(GoldPlugin)
-        .add_system(send_click_event)
+        .add_system(send_click)
         .run();
 }
 
@@ -55,9 +55,9 @@ fn new_renet_client() -> RenetClient {
     RenetClient::new(current_time, socket, client_id, connection_config, authentication).unwrap()
 }
 
-fn send_click_event(mouse_button_input: Res<Input<MouseButton>>, mut client: ResMut<RenetClient>) {
-    if mouse_button_input.just_pressed(MouseButton::Left) {
+fn send_click(mut click_events: EventReader<clicker_core::gold::ClickEvent>, mut client: ResMut<RenetClient>) {
+    for _ in click_events.iter() {
         let message = bincode::serialize(&ClientMessage::ClickEvent).unwrap();
-        client.send_message(0, message)
+        client.send_message(0, message);
     }
 }
