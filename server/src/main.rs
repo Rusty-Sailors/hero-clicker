@@ -1,4 +1,7 @@
-use bevy::prelude::*;
+use bevy::{
+    prelude::*,
+    app::ScheduleRunnerSettings,
+};
 use bevy_renet::{
     renet::{
         RenetConnectionConfig, RenetServer, ServerAuthentication,
@@ -19,7 +22,8 @@ fn main() {
     let server = new_renet_server();
     let mut app = App::new();
     app
-        .add_plugins(DefaultPlugins)
+        .insert_resource(ScheduleRunnerSettings::run_loop(Duration::from_secs_f64(1.0 / 60.0)))
+        .add_plugins(MinimalPlugins)
         .add_plugin(RenetServerPlugin)
         .add_plugins(clicker_core::ClickerCorePlugins)
         .insert_resource(server)
