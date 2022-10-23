@@ -3,12 +3,19 @@ resolver = "2" # Important! wgpu/Bevy needs this!
 
 members = [
     "client",
-    "server"
+    "server",
+    "clicker_core"
 ]
 
 [workspace.package]
 version = "0.1.0"
 edition = "2021"
+
+[profile.dev]
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 3
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

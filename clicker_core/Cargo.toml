@@ -1,5 +1,5 @@
 [package]
-name = "server"
+name = "clicker_core"
 version = "0.1.0"
 edition = "2021"
 
@@ -10,4 +10,3 @@ bevy = { version = "0.8.1", features = ["dynamic"] }
 bevy_renet = "0.0.5"
 serde = { version = "1.0", features = [ "derive" ] }
 bincode = "1.3.1"
-renet_visualizer = "0.0.2"

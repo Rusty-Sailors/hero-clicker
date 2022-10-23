@@ -1,4 +1,4 @@
-use std::{collections::HashMap, net::UdpSocket, time::SystemTime, time::Duration};
+use std::{net::UdpSocket, time::SystemTime};
 use serde::{Deserialize, Serialize};
 
 use bevy::prelude::*;
@@ -24,15 +24,16 @@ enum ClientMessage {
 
 fn main() {
     App::new()
-    .add_plugin(RenetClientPlugin)
-    .insert_resource(new_renet_client())
-    .add_startup_system(spawn_camera)
-    .add_plugins(DefaultPlugins)
-    .add_plugin(WorldInspectorPlugin::default())
-    .add_plugin(HeroPlugin)
-    .add_plugin(GoldPlugin)
-    .add_system(send_click_event)
-    .run();
+        .add_plugin(RenetClientPlugin)
+        .insert_resource(new_renet_client())
+        .add_startup_system(spawn_camera)
+        .add_plugins(DefaultPlugins)
+        .add_plugin(WorldInspectorPlugin::default())
+        .add_plugins(clicker_core::ClickerCorePlugins)
+        .add_plugin(HeroPlugin)
+        .add_plugin(GoldPlugin)
+        .add_system(send_click_event)
+        .run();
 }
 
 fn spawn_camera(mut commands: Commands) {

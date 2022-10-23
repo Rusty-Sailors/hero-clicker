@@ -1,20 +1,16 @@
 use bevy::prelude::*;
 
-#[derive(Reflect, Component, Default)]
-#[reflect(Component)]
-pub struct Hero {
-}
-
-pub struct HeroPlugin;
+use clicker_core::hero::*;
 
 struct HeroSheet(Handle<TextureAtlas>);
+
+pub struct HeroPlugin;
 
 impl Plugin for HeroPlugin {
     fn build(&self, app: &mut App) {
         app
             .add_startup_system_to_stage(StartupStage::PreStartup, load_assets)
-            .add_startup_system(spawn_hero)
-            .register_type::<Hero>();
+            .add_system(spawn_hero);
     }
 }
 
@@ -25,16 +21,20 @@ fn load_assets(mut command: Commands, asset_server: Res<AssetServer>, mut textur
     command.insert_resource(HeroSheet(atlas_handle));
 }
 
-fn spawn_hero(mut commands: Commands, hero_assets: Res<HeroSheet>) {
-    let sprite: TextureAtlasSprite = TextureAtlasSprite::new(0);
+fn spawn_hero(mut commands: Commands, mut hero_spawn_events: EventReader<HeroSpawnedEvent>, hero_assets: Res<HeroSheet>) {
+    for hero_spawn in hero_spawn_events.iter() {
+        let sprite: TextureAtlasSprite = TextureAtlasSprite::new(0);
     
-    commands.spawn_bundle(SpriteSheetBundle {
-        sprite: sprite,
-        texture_atlas: hero_assets.0.clone(),
-        transform: Transform {
-            translation: Vec3::new(0.0,0.0,1.0),
-            ..Default::default()
-        },
-        ..Default::default()
-    }).insert(Name::new("Hero"));
+        commands
+            .entity(hero_spawn.0)
+            .insert_bundle(SpriteSheetBundle {
+                sprite: sprite,
+                texture_atlas: hero_assets.0.clone(),
+                transform: Transform {
+                    translation: Vec3::new(0.0,0.0,1.0),
+                    ..Default::default()
+                },
+                ..Default::default()
+            });
+    }
 }
