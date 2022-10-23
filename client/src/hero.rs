@@ -10,7 +10,7 @@ impl Plugin for HeroPlugin {
     fn build(&self, app: &mut App) {
         app
             .add_startup_system_to_stage(StartupStage::PreStartup, load_assets)
-            .add_system(spawn_hero);
+            .add_system_to_stage(CoreStage::PostUpdate, spawn_hero);
     }
 }
 

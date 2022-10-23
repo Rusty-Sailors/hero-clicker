@@ -7,9 +7,9 @@ impl Plugin for GoldPlugin {
     fn build(&self, app: &mut App) {
         app
             .register_type::<GoldText>()
-            .add_startup_system(spawn_)
-            .add_system(mouse_click_system)
-            .add_system(update_gold_text_system);
+            .add_startup_system(spawn_gold_text)
+            .add_system_to_stage(CoreStage::PreUpdate, mouse_click_system)
+            .add_system_to_stage(CoreStage::PostUpdate, update_gold_text_system);
     }
 }
 
@@ -17,7 +17,7 @@ impl Plugin for GoldPlugin {
 #[reflect(Component)]
 struct GoldText;
 
-fn spawn_(mut commands: Commands, asset_server: Res<AssetServer>) {
+fn spawn_gold_text(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn()
         .insert(GoldText)
         .insert(Name::new("Gold Text"))

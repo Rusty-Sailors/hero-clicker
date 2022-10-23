@@ -11,6 +11,7 @@ use std::time::SystemTime;
 use std::{net::UdpSocket};
 
 use clicker_core::network::*;
+use clicker_core::gold::ClickEvent;
 
 fn main() {
     let server = new_renet_server();
@@ -18,9 +19,10 @@ fn main() {
     app
         .add_plugins(DefaultPlugins)
         .add_plugin(RenetServerPlugin)
+        .add_plugins(clicker_core::ClickerCorePlugins)
         .insert_resource(server)
-        .add_system(handle_server_events_system)
-        .add_system(handle_client_messages);
+        .add_system_to_stage(CoreStage::PreUpdate, handle_server_events_system)
+        .add_system_to_stage(CoreStage::PreUpdate, handle_client_messages);
     app.run();
 }
 
@@ -46,12 +48,13 @@ fn handle_server_events_system(mut server_events: EventReader<ServerEvent>) {
     }
 }
 
-fn handle_client_messages(mut server: ResMut<RenetServer>) {
+fn handle_client_messages(mut server: ResMut<RenetServer>, mut writer: EventWriter<ClickEvent>) {
     for client_id in server.clients_id().into_iter() {
         while let Some(message) = server.receive_message(client_id, 0) {
             let msg = bincode::deserialize(&message).unwrap();
             match msg {
                 Messages::ClickEvent => {
+                    writer.send(ClickEvent);
                     info!("Got ClickEvent");
                 }
             }

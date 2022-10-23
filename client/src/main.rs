@@ -13,10 +13,10 @@ use clicker_core::network::*;
 mod hero;
 mod gold;
 mod camera;
+mod render;
 
-pub use hero::*;
-pub use gold::*;
 pub use camera::*;
+pub use render::*;
 
 fn main() {
     App::new()
@@ -26,8 +26,7 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_plugin(WorldInspectorPlugin::default())
         .add_plugins(clicker_core::ClickerCorePlugins)
-        .add_plugin(HeroPlugin)
-        .add_plugin(GoldPlugin)
+        .add_plugins(RenderPlugins)
         .add_system(send_click)
         .run();
 }
