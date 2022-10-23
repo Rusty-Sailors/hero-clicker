@@ -9,14 +9,8 @@ use bevy_renet::{
 };
 use std::time::SystemTime;
 use std::{net::UdpSocket};
-use serde::{Deserialize, Serialize};
 
-const PROTOCOL_ID: u64 = 7;
-
-#[derive(Debug, Serialize, Deserialize, Component)]
-enum ClientMessage {
-    ClickEvent
-}
+use clicker_core::network::*;
 
 fn main() {
     let server = new_renet_server();
@@ -57,7 +51,7 @@ fn handle_client_messages(mut server: ResMut<RenetServer>) {
         while let Some(message) = server.receive_message(client_id, 0) {
             let msg = bincode::deserialize(&message).unwrap();
             match msg {
-                ClientMessage::ClickEvent => {
+                Messages::ClickEvent => {
                     info!("Got ClickEvent");
                 }
             }

@@ -1,5 +1,4 @@
 use std::{net::UdpSocket, time::SystemTime};
-use serde::{Deserialize, Serialize};
 
 use bevy::prelude::*;
 use bevy_inspector_egui::WorldInspectorPlugin;
@@ -9,24 +8,21 @@ use bevy_renet::{
     }, RenetClientPlugin
 };
 
-const PROTOCOL_ID: u64 = 7;
+use clicker_core::network::*;
 
 mod hero;
 mod gold;
+mod camera;
 
 pub use hero::*;
 pub use gold::*;
-
-#[derive(Debug, Serialize, Deserialize, Component)]
-enum ClientMessage {
-    ClickEvent
-}
+pub use camera::*;
 
 fn main() {
     App::new()
         .add_plugin(RenetClientPlugin)
         .insert_resource(new_renet_client())
-        .add_startup_system(spawn_camera)
+        .add_plugin(CameraPlugin)
         .add_plugins(DefaultPlugins)
         .add_plugin(WorldInspectorPlugin::default())
         .add_plugins(clicker_core::ClickerCorePlugins)
@@ -34,10 +30,6 @@ fn main() {
         .add_plugin(GoldPlugin)
         .add_system(send_click)
         .run();
-}
-
-fn spawn_camera(mut commands: Commands) {
-    commands.spawn_bundle(Camera2dBundle::default());
 }
 
 fn new_renet_client() -> RenetClient {
@@ -57,7 +49,7 @@ fn new_renet_client() -> RenetClient {
 
 fn send_click(mut click_events: EventReader<clicker_core::gold::ClickEvent>, mut client: ResMut<RenetClient>) {
     for _ in click_events.iter() {
-        let message = bincode::serialize(&ClientMessage::ClickEvent).unwrap();
+        let message = bincode::serialize(&Messages::ClickEvent).unwrap();
         client.send_message(0, message);
     }
 }

@@ -5,9 +5,11 @@ use bevy::{
 
 pub mod hero;
 pub mod gold;
+pub mod network;
 
 pub use hero::*;
 pub use gold::*;
+pub use network::*;
 
 pub struct ClickerCorePlugins;
 
