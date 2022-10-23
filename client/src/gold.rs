@@ -1,5 +1,7 @@
 use bevy::prelude::*;
+use iyes_loopless::prelude::*;
 use clicker_core::gold::*;
+use clicker_core::AppState;
 
 pub struct GoldPlugin;
 
@@ -7,9 +9,17 @@ impl Plugin for GoldPlugin {
     fn build(&self, app: &mut App) {
         app
             .register_type::<GoldText>()
-            .add_startup_system(spawn_gold_text)
-            .add_system_to_stage(CoreStage::PreUpdate, mouse_click_system)
-            .add_system_to_stage(CoreStage::PostUpdate, update_gold_text_system);
+            .add_enter_system(AppState::InGame, spawn_gold_text)
+            .add_system_to_stage(
+                CoreStage::PreUpdate,
+                mouse_click_system
+                    .run_in_state(AppState::InGame)
+            )
+            .add_system_to_stage(
+                CoreStage::PostUpdate,
+                update_gold_text_system
+                    .run_in_state(AppState::InGame)
+            );
     }
 }
 

@@ -7,19 +7,24 @@ use bevy_renet::{
         ClientAuthentication, RenetClient, RenetConnectionConfig
     }, RenetClientPlugin
 };
+use iyes_loopless::prelude::*;
 
+use clicker_core::AppState;
 use clicker_core::network::*;
 
 mod hero;
 mod gold;
 mod camera;
 mod render;
+mod menu;
 
 pub use camera::*;
 pub use render::*;
+pub use menu::*;
 
 fn main() {
     App::new()
+        .add_loopless_state(AppState::MainMenu)
         .add_plugin(RenetClientPlugin)
         .insert_resource(new_renet_client())
         .add_plugin(CameraPlugin)
@@ -27,6 +32,7 @@ fn main() {
         .add_plugin(WorldInspectorPlugin::default())
         .add_plugins(clicker_core::ClickerCorePlugins)
         .add_plugins(RenderPlugins)
+        .add_plugin(MenuPlugin)
         .add_system(send_click)
         .run();
 }

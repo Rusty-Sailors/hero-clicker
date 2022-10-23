@@ -1,6 +1,7 @@
 use bevy::prelude::*;
-
+use iyes_loopless::prelude::*;
 use clicker_core::hero::*;
+use clicker_core::AppState;
 
 struct HeroSheet(Handle<TextureAtlas>);
 
@@ -10,7 +11,11 @@ impl Plugin for HeroPlugin {
     fn build(&self, app: &mut App) {
         app
             .add_startup_system_to_stage(StartupStage::PreStartup, load_assets)
-            .add_system_to_stage(CoreStage::PostUpdate, spawn_hero);
+            .add_system_to_stage(
+                CoreStage::PostUpdate,
+                spawn_hero
+                    .run_in_state(AppState::InGame)
+            );
     }
 }
 

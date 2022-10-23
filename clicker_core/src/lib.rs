@@ -20,3 +20,15 @@ impl PluginGroup for ClickerCorePlugins {
             .add(HeroPlugin);
     }
 }
+
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
+pub enum AppState {
+    MainMenu,
+    InGame,
+}
+
+pub fn despawn_with<T: Component>(mut commands: Commands, q: Query<Entity, With<T>>) {
+    for e in q.iter() {
+        commands.entity(e).despawn_recursive();
+    }
+}
