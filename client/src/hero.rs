@@ -21,12 +21,13 @@ fn load_assets(mut command: Commands, asset_server: Res<AssetServer>, mut textur
     command.insert_resource(HeroSheet(atlas_handle));
 }
 
-fn spawn_hero(mut commands: Commands, mut hero_spawn_events: EventReader<HeroSpawnedEvent>, hero_assets: Res<HeroSheet>) {
-    for hero_spawn in hero_spawn_events.iter() {
+
+fn spawn_hero(mut commands: Commands, heros: Query<Entity, Added<Hero>>, hero_assets: Res<HeroSheet>) {
+    for hero in heros.iter() {
         let sprite: TextureAtlasSprite = TextureAtlasSprite::new(0);
     
         commands
-            .entity(hero_spawn.0)
+            .entity(hero)
             .insert_bundle(SpriteSheetBundle {
                 sprite: sprite,
                 texture_atlas: hero_assets.0.clone(),

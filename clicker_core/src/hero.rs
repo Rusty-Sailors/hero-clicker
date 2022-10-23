@@ -2,8 +2,7 @@ use bevy::prelude::*;
 
 #[derive(Reflect, Component, Default)]
 #[reflect(Component)]
-pub struct Hero {
-}
+pub struct Hero;
 
 pub struct HeroSpawnedEvent(pub Entity);
 
@@ -18,7 +17,8 @@ impl Plugin for HeroPlugin {
     }
 }
 
-fn spawn_hero(mut commands: Commands, mut writer: EventWriter<HeroSpawnedEvent>) {    
-    let entity = commands.spawn().insert(Name::new("Hero")).id();
-    writer.send(HeroSpawnedEvent(entity));
+fn spawn_hero(mut commands: Commands) {    
+    commands.spawn()
+        .insert(Hero)
+        .insert(Name::new("Hero"));
 }
