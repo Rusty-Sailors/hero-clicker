@@ -11,11 +11,6 @@ impl Plugin for GoldPlugin {
             .register_type::<GoldText>()
             .add_enter_system(AppState::InGame, spawn_gold_text)
             .add_system_to_stage(
-                CoreStage::PreUpdate,
-                mouse_click_system
-                    .run_in_state(AppState::InGame)
-            )
-            .add_system_to_stage(
                 CoreStage::PostUpdate,
                 update_gold_text_system
                     .run_in_state(AppState::InGame)
@@ -52,12 +47,6 @@ fn spawn_gold_text(mut commands: Commands, asset_server: Res<AssetServer>) {
                 ..default()
             }),
         );
-}
-
-fn mouse_click_system(mouse_button_input: Res<Input<MouseButton>>, mut writer: EventWriter<ClickEvent>) {
-    if mouse_button_input.just_pressed(MouseButton::Left) {
-        writer.send(ClickEvent);
-    }
 }
 
 fn update_gold_text_system(gold: Res<Gold>, mut query: Query<&mut Text, With<GoldText>>) {

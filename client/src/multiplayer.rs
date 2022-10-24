@@ -50,7 +50,7 @@ fn receive_message_system(mut client: ResMut<RenetClient>, mut gold: ResMut<clic
     }
 }
 
-fn send_click(mut click_events: EventReader<clicker_core::gold::ClickEvent>, mut client: ResMut<RenetClient>) {
+fn send_click(mut click_events: EventReader<clicker_core::events::ClickEvent>, mut client: ResMut<RenetClient>) {
     for _ in click_events.iter() {
         let message = bincode::serialize(&ClientMessages::ClickEvent).unwrap();
         client.send_message(0, message);

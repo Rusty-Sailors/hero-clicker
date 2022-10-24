@@ -1,17 +1,15 @@
 use bevy::prelude::*;
+use crate::*;
 
 pub struct GoldPlugin;
 
 impl Plugin for GoldPlugin {
     fn build(&self, app: &mut App) {
         app
-            .add_event::<ClickEvent>()
             .insert_resource(Gold { amount: 0 })
             .add_system(hero_clicked_system);
     }
 }
-
-pub struct ClickEvent;
 
 pub struct Gold {
     pub amount: u64
