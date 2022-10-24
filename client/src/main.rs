@@ -12,6 +12,7 @@ mod camera;
 mod render;
 mod menu;
 mod multiplayer;
+mod ui;
 
 pub use camera::*;
 pub use render::*;
@@ -29,6 +30,7 @@ fn main() {
             present_mode: bevy::window::PresentMode::Fifo,
             ..Default::default()
         })
+        .add_plugin(ui::UiPlugin)
         .add_plugin(CameraPlugin)
         .add_plugins(DefaultPlugins)
         .add_plugin(WorldInspectorPlugin::default())
