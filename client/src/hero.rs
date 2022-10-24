@@ -72,13 +72,13 @@ fn spawn_hero(mut commands: Commands, heros: Query<Entity, Added<Hero>>, asset_s
                 }).with_children(|parent| {
                     parent.spawn_bundle(ButtonBundle {
                         style: Style {
-                            size: Size::new(Val::Px(100.0), Val::Px(100.0)),
+                            size: Size::new(Val::Px(175.0), Val::Px(175.0)),
                             justify_content: JustifyContent::Center,
                             align_items: AlignItems::Center,
                             ..default()
                         },
                         color: Color::rgb(0.9,0.9,0.9).into(),
-                        image: UiImage(asset_server.load("clicker_icon.png")),
+                        image: UiImage(asset_server.load("hero.png")),
                         ..default()
                     }).insert(HeroButton);
                 });
